@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import RSWP from './swipeProps';
 
+const range = (from, to) => Array.from(new Array(to - from), (_, i) => i + from);
+
+
 export default function Demo() {
   const [pos, setPos] = useState(0);
+  const count = 6;
 
   const next = () => {
     setPos(pos + 1);
@@ -16,31 +20,38 @@ export default function Demo() {
     setPos(i);
   };
 
-  return (<div>
+  return (<div className="demo">
     <h1>Swipe demo</h1>
 
-    <RSWP pos={pos} min={0} max={5} transitionEnd={go}>
+    <RSWP className="userSwipeClass" pos={pos} min={0} max={count - 1} transitionEnd={go}>
       {(pos) => {
         return (
           <div className="swipeableRoot">
+            <button className="prev" onClick={prev}>←</button>
+            <button className="next" onClick={next}>→</button>
+            <div className="dots">
+              {range(0, count).map(i => <div className="dot" key={i} onClick={() => {
+                go(i)
+              }} />)}
+              <div className="dot dot-active" style={{
+                left: `${Math.max(0, Math.min(100, pos / count * 100))}%`
+              }} />
+            </div>
             <div className="progress" style={{
-              width: `${pos / 5 * 100}%`,
+              width: `calc(${100 - Math.min(100, pos / (count - 1) * 100)}% - 30px)`,
             }}></div>
             <div className="swipeable" style={{
               left: `${-pos * 100}%`
             }}>
-              <div>1</div>
-              <div>2</div>
-              <div>3</div>
-              <div>4</div>
-              <div>5</div>
-              <div>6</div>
+              {range(0, count).map(i => {
+                return <div key={i}><span style={{
+                  transform: `scale(${((count - Math.abs(i - pos)) / count) ** 8 * 1.3})`
+                }}>{i + 1}</span></div>;
+              })}
             </div>
           </div>
         );
       }}
     </RSWP>
-    <button onClick={prev}>←</button>
-    <button onClick={next}>→</button>
   </div>);
 }

@@ -3,6 +3,8 @@ import runWithFps from 'run-with-fps';
 
 function easeInOutQuad (t) { return t<.5 ? 2*t*t : -1+(4-2*t)*t }
 
+const slideDuration = 300;
+
 function tween(from, to, duration, cb) {
   let stopped = false;
   const start = Date.now();
@@ -43,27 +45,14 @@ const useBoundingClientRect = (ref) => {
   return rect;
 };
 
-export default function ReactSwipeProps({ children, pos: propsPos, min, max, transitionEnd }) {
+export default function ReactSwipeProps({ children, pos: propsPos, min, max, transitionEnd, ...props }) {
   const [pos, setPos] = useState(min);
   const [dst, setDst] = useState(min);
   const root = useRef(null);
   const rect = useBoundingClientRect(root);
-  console.log(dst, pos);
-
-  const go = (i) => {
-    const n = Math.min(Math.max(Math.round(i), min), max);
-    return tween(pos, n, 300, (v) => {
-      setPos(v);
-      setDst(v);
-
-      if (v === n) {
-        transitionEnd(n);
-      }
-    });
-  }
 
   const slide = (from, to) => {
-    return tween(from, to, 200, (v) => {
+    return tween(from, to, Math.max(0.5, Math.min(2, Math.abs(from - to))) * slideDuration, (v) => {
       setPos(v);
 
       if (v === to) {
@@ -73,15 +62,17 @@ export default function ReactSwipeProps({ children, pos: propsPos, min, max, tra
   }
 
   useEffect(() => {
-    if (propsPos !== pos) {
-      const stop = go(propsPos);
+    const nextPos = Math.min(Math.max(Math.round(propsPos), min), max);
+    if (nextPos !== pos) {
+      setDst(nextPos);
+    }
 
-      return stop;
+    if (nextPos !== propsPos) {
+      transitionEnd(nextPos);
     }
   }, [propsPos]);
 
   useEffect(() => {
-    console.log('useEffect', dst, pos);
     if (dst !== pos) {
       const stop = slide(pos, dst);
 
@@ -143,7 +134,7 @@ export default function ReactSwipeProps({ children, pos: propsPos, min, max, tra
   });
 
   return (
-    <div className="swipeRoot" ref={root}>
+    <div className="swipeRoot" ref={root} {...props}>
       {children(pos)}
     </div>
   );

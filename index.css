@@ -1,16 +1,47 @@
 html {
   font-family: Helvetica, sans-serif;
+  width: 100%;
+}
+
+body {
+  margin: 0;
+  width: 100%;
+}
+
+.demo {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 50px 100px;
+  position: relative;
+  overflow: hidden;
+}
+
+h1 {
+  font-size: 50px;
+  margin: 50px 0 100px;
+  text-align: center;
 }
 
 .swipeRoot {
-  width: 500px;
-  border: 1px solid;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .swipeableRoot {
   width: 100%;
-  overflow: hidden;
+  /* overflow: hidden; */
   position: relative;
+}
+
+.swipeableRoot::before {
+  position: absolute;
+  z-index: 10;
+  content: '';
+  left: -30px;
+  top: -30px;
+  right: -30px;
+  bottom: -30px;
+  border: 30px solid rgba(50,50,0,0.3);
 }
 
 .swipeable {
@@ -28,15 +59,70 @@ html {
   align-items: center;
   font-size: 130px;
   font-weight: bold;
-  border-left: 1px solid #000;
-  border-right: 1px solid #000;
 }
 
 .progress {
   position: absolute;
   z-index: 10;
-  top: 0;
-  left: 0;
-  height: 10px;
+  top: 15px;
+  right: 15px;
+  height: 15px;
   background: #ff0;
+}
+
+.dots {
+  position: absolute;
+  z-index: 10;
+  left: 50%;
+  transform: translate(-50%, 0);
+  bottom: 10px;
+  display: flex;
+}
+
+.dot {
+  position: relative;
+  width: 22px;
+  height: 22px;
+}
+.dot::before {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: 6px;
+  left: 6px;
+  border-radius: 50%;
+  background-color: #000;
+  opacity: 0.3;
+}
+
+.dot-active {
+  position: absolute;
+  top: 0;
+}
+.dot-active::before {
+  z-index: 1;
+  opacity: 1;
+  background-color: #FF0;
+}
+
+.prev,.next {
+  position: absolute;
+  z-index: 20;
+  top: 50%;
+  margin-top: -10px;
+}
+
+.prev {
+  left: 10px;
+}
+
+.next {
+  right: 10px;
+}
+
+.userSwipeClass {
+  max-width: 500px;
+  width: 100%;
+  margin: 0 auto;
 }
