@@ -1,0 +1,26 @@
+html {
+  font-family: Helvetica, sans-serif;
+}
+
+.swipeRoot {
+  width: 500px;
+  border: 1px solid;
+}
+
+.swipeableRoot {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.swipeable {
+  position: relative;
+  width: 600%;
+  height: 300px;
+  background-image: linear-gradient(to right, #0fc, #0cf);
+  display: flex;
+}
+
+.swipeable div {
+  flex: 1;
+}
