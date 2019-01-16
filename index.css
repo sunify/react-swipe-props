@@ -23,4 +23,20 @@ html {
 
 .swipeable div {
   flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 130px;
+  font-weight: bold;
+  border-left: 1px solid #000;
+  border-right: 1px solid #000;
+}
+
+.progress {
+  position: absolute;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  height: 10px;
+  background: #ff0;
 }

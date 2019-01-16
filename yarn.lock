@@ -3743,6 +3743,10 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
     hash-base "^3.0.0"
     inherits "^2.0.1"
 
+run-with-fps@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/run-with-fps/-/run-with-fps-1.0.4.tgz#45454df47afa3ccf8732c334465d1bea103b93e2"
+
 safe-buffer@^5.0.1, safe-buffer@^5.1.0, safe-buffer@^5.1.1, safe-buffer@^5.1.2, safe-buffer@~5.1.0, safe-buffer@~5.1.1:
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.2.tgz#991ec69d296e0313747d59bdfd2b745c35f8828d"

@@ -23,6 +23,9 @@ export default function Demo() {
       {(pos) => {
         return (
           <div className="swipeableRoot">
+            <div className="progress" style={{
+              width: `${pos / 5 * 100}%`,
+            }}></div>
             <div className="swipeable" style={{
               left: `${-pos * 100}%`
             }}>
