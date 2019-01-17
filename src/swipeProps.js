@@ -122,13 +122,15 @@ export default function ReactSwipeProps({ children, pos: propsPos, min, max, tra
           setPos(pos + state.delta);
           setDst(pos + state.delta);
         } else {
-          const niceTouch = e.touches ? !(e.touches.length > 1 || (e.scale && e.scale !== 1)) : true;
-          if (niceTouch && Math.abs(deltaX) > Math.abs(deltaY)) {
-            console.log('DRAG');
-            e.preventDefault();
-            state.dragging = true;
+          if (e.touches) {
+            if (!(e.touches.length > 1 || (e.scale && e.scale !== 1)) && Math.abs(deltaX) > Math.abs(deltaY)) {
+              e.preventDefault();
+              state.dragging = true;
+            } else {
+              removeListeners();
+            }
           } else {
-            removeListeners();
+            state.dragging = true;
           }
         }
       }

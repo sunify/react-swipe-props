@@ -1,17 +1,28 @@
 {
   "name": "react-swipe-props",
-  "version": "1.0.0",
-  "main": "index.js",
+  "version": "0.0.1",
+  "main": "dist/swipeProps.js",
   "license": "MIT",
   "devDependencies": {
+    "@babel/cli": "^7.2.3",
     "@babel/core": "^7.2.2",
     "@babel/preset-env": "^7.2.3",
-    "@babel/preset-react": "^7.0.0",
-    "parcel-bundler": "^1.11.0"
+    "@babel/preset-react": "^7.0.0"
+  },
+  "peerDependencies": {
+    "react": "16.7.0-alpha.2 || 16.8.0-alpha.0 || 16.8.0-alpha.1"
   },
   "dependencies": {
-    "react": "^16.8.0-alpha.1",
-    "react-dom": "^16.8.0-alpha.1",
     "run-with-fps": "^1.0.4"
+  },
+  "files": [
+    "dist",
+    "index.d.ts"
+  ],
+  "scripts": {
+    "test": "exit 0",
+    "prebuild": "rm -rf dist && mkdir dist",
+    "build": "yarn prebuild && ./node_modules/.bin/babel src --out-dir dist",
+    "prepublish": "yarn build"
   }
 }

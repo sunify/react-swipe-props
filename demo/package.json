@@ -1,0 +1,21 @@
+{
+  "name": "demo",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "react": "16.8.0-alpha.1",
+    "react-dom": "16.8.0-alpha.1",
+    "react-swipe-props": "../"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.2.3",
+    "@babel/preset-react": "^7.0.0",
+    "parcel-bundler": "^1.11.0"
+  },
+  "scripts": {
+    "start": "./node_modules/.bin/parcel index.html --open",
+    "build": "./node_modules/.bin/parcel build --public-url '.' index.html"
+  }
+}

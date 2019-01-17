@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import RSWP from './swipeProps';
+import RSWP from 'react-swipe-props';
 
 const range = (from, to) => Array.from(new Array(to - from), (_, i) => i + from);
 
-
-export default function Demo() {
+export default function App() {
   const [pos, setPos] = useState(0);
   const count = 6;
 
