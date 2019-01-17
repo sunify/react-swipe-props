@@ -45,7 +45,7 @@ const useBoundingClientRect = (ref) => {
   return rect;
 };
 
-export default function ReactSwipeProps({ children, pos: propsPos, min, max, transitionEnd, ...props }) {
+export default function ReactSwipeProps({ children, pos: propsPos = 0, min, max, transitionEnd, ...props }) {
   const [pos, setPos] = useState(min);
   const [dst, setDst] = useState(min);
   const root = useRef(null);
@@ -168,8 +168,8 @@ export default function ReactSwipeProps({ children, pos: propsPos, min, max, tra
   });
 
   return (
-    <div className="swipeRoot" ref={root} {...props}>
-      {children(pos)}
+    <div ref={root} {...props}>
+      {children && children(pos)}
     </div>
   );
 }
