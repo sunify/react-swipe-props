@@ -45,7 +45,8 @@ export default function Demo() {
             }}>
               {range(0, count).map(i => {
                 return <div key={i}><span style={{
-                  transform: `scale(${((count - Math.abs(i - pos)) / count) ** 8 * 1.3})`
+                  transform: `scale(${((count - Math.abs(i - pos)) / count) ** 8 * 1.3})`,
+                  opacity: 1 - Math.abs(i - pos) / count ** 0.2
                 }}>{i + 1}</span></div>;
               })}
             </div>

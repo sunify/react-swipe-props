@@ -80,17 +80,10 @@ export default function ReactSwipeProps({ children, pos: propsPos, min, max, tra
     }
   }, [dst, propsPos]);
 
-  useEffect(() => {
-    const state = { x: 0, y: 0, dragging: false, delta: 0 };
-    const handleDragStart = (e) => {
-      e.preventDefault();
-      state.x = e.pageX;
-      state.y = e.pageY;
-      state.delta = 0;
-      state.dragging = true;
-      document.addEventListener('mousemove', handleMove);
-      document.addEventListener('mouseup', handleEnd);
-    };
+  const handleDragStart = (e) => {
+    const { pageX, pageY } = e.touches ? e.touches[0] : e;
+    const state = { x: pageX, y: pageY, dragging: true, delta: 0 };
+    e.preventDefault();
 
     const calcSpeed = (delta) => {
       const currentPos = pos + state.delta;
@@ -100,41 +93,40 @@ export default function ReactSwipeProps({ children, pos: propsPos, min, max, tra
         return Math.max(0, 0.3 - state.delta / 2);
       }
 
-      return 1.5;
+      return 0.8;
     }
 
     const handleMove = (e) => {
       if (state.dragging) {
         e.preventDefault();
-        const delta = (state.x - e.pageX) / rect.width;
+        const { pageX, pageY } = e.touches ? e.touches[0] : e;
+        const delta = (state.x - pageX) / rect.width;
         const speed = calcSpeed(delta);
         state.delta += delta * speed;
-        state.x = e.pageX;
-        state.y = e.pageY;
+        state.x = pageX;
+        state.y = pageY;
 
         setPos(pos + state.delta);
         setDst(pos + state.delta);
       }
     }
 
-    const handleEnd = (e) => {
+    const handleEnd = () => {
       state.dragging = false;
       setDst(Math.min(Math.max(Math.round(pos + state.delta), min), max));
+      document.removeEventListener('touchmove', handleMove);
+      document.removeEventListener('touchend', handleEnd);
       document.removeEventListener('mousemove', handleMove);
       document.removeEventListener('mouseup', handleEnd);
     }
-
-    if (root.current) {
-      root.current.addEventListener('mousedown', handleDragStart);
-
-      return () => {
-        root.current.removeEventListener('mousedown', handleDragStart);
-      }
-    }
-  });
+    document.addEventListener('touchmove', handleMove);
+    document.addEventListener('touchend', handleEnd);
+    document.addEventListener('mousemove', handleMove);
+    document.addEventListener('mouseup', handleEnd);
+  };
 
   return (
-    <div className="swipeRoot" ref={root} {...props}>
+    <div className="swipeRoot" ref={root} onMouseDown={handleDragStart} onTouchStart={handleDragStart} {...props}>
       {children(pos)}
     </div>
   );
