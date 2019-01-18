@@ -7,12 +7,16 @@
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.2.2",
     "@babel/preset-env": "^7.2.3",
-    "@babel/preset-react": "^7.0.0"
+    "@babel/preset-react": "^7.0.0",
+    "parcel-bundler": "^1.11.0",
+    "react": "16.8.0-alpha.1",
+    "react-dom": "16.8.0-alpha.1"
   },
   "peerDependencies": {
     "react": "16.7.0-alpha.2 || 16.8.0-alpha.0 || 16.8.0-alpha.1"
   },
   "dependencies": {
+    "react-motion": "^0.5.2",
     "run-with-fps": "^1.0.4"
   },
   "files": [
@@ -23,6 +27,8 @@
     "test": "exit 0",
     "prebuild": "rm -rf dist && mkdir dist",
     "build": "yarn prebuild && ./node_modules/.bin/babel src --out-dir dist",
-    "prepublish": "yarn build"
+    "prepublish": "yarn build",
+    "start-demo": "./node_modules/.bin/parcel index.html --open",
+    "build-demo": "./node_modules/.bin/parcel build index.html"
   }
 }

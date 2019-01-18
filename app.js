@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import RSWP from 'react-swipe-props';
+import RSWP from './src/swipeProps';
 
 const range = (from, to) => Array.from(new Array(to - from), (_, i) => i + from);
 
