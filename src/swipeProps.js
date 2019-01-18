@@ -61,11 +61,15 @@ export default function ReactSwipeProps({
     return tween(from, to, Math.max(0.5, Math.min(2, Math.abs(from - to))) * slideDuration, (v) => {
       setPos(v);
 
-      if (v === to) {
+      if (v === to && transitionEnd) {
         transitionEnd(to);
       }
     });
   }
+
+  const go = (pos) => {
+    setDst(pos);
+  };
 
   useEffect(() => {
     const nextPos = Math.min(Math.max(Math.round(propsPos), min), max);
@@ -73,7 +77,7 @@ export default function ReactSwipeProps({
       setDst(nextPos);
     }
 
-    if (nextPos !== propsPos) {
+    if (nextPos !== propsPos && transitionEnd) {
       transitionEnd(nextPos);
     }
   }, [propsPos]);
@@ -175,7 +179,7 @@ export default function ReactSwipeProps({
 
   return (
     <div ref={root} {...props}>
-      {children && children(pos)}
+      {children && children(pos, go)}
     </div>
   );
 }

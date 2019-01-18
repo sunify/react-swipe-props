@@ -1,6 +1,6 @@
 declare module 'react-swipe-props' {
   export type SwipeProps = {
-    children?: (pos: number) => React.ReactNode;
+    children?: (pos: number, slide?: (n: number) => void) => React.ReactNode;
     pos?: number;
     slideDuration?: number;
     min: number;
