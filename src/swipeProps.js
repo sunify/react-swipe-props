@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import runWithFps from 'run-with-fps';
 
 function easeInOutQuad (t) { return t<.5 ? 2*t*t : -1+(4-2*t)*t }
@@ -59,7 +59,7 @@ export default function ReactSwipeProps({
   const rect = useBoundingClientRect(root);
 
   const slide = (from, to) => {
-    return tween(from, to, Math.max(0.5, Math.min(2, Math.abs(from - to))) * slideDuration, (v) => {
+    return tween(from, to, Math.max(1, Math.min(2, Math.abs(from - to))) * slideDuration, (v) => {
       setPos(v);
 
       if (v === to && transitionEnd) {
@@ -111,7 +111,7 @@ export default function ReactSwipeProps({
           return Math.max(0, 0.3 - state.delta / 2);
         }
 
-        return 0.8;
+        return 1;
       }
 
       const removeListeners = () => {
