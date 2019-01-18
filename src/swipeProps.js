@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import runWithFps from 'run-with-fps';
 
 function easeInOutQuad (t) { return t<.5 ? 2*t*t : -1+(4-2*t)*t }
@@ -53,6 +53,7 @@ export default function ReactSwipeProps({
   ...props
 }) {
   const [pos, setPos] = useState(min);
+  const [interacting, setInteracting] = useState(false);
   const [dst, setDst] = useState(min);
   const root = useRef(null);
   const rect = useBoundingClientRect(root);
@@ -95,6 +96,9 @@ export default function ReactSwipeProps({
   useEffect(() => {
     const handlerOptions = { passive: false };
     const handleDragStart = (e) => {
+      if (!e.touches && e.button !== 0) {
+        return;
+      }
       const { pageX, pageY } = e.touches ? e.touches[0] : e;
       const state = { x: pageX, y: pageY, dragging: false, delta: 0 };
       const startTime = Date.now();
@@ -140,6 +144,7 @@ export default function ReactSwipeProps({
               removeListeners();
             }
           } else {
+            setInteracting(true);
             state.dragging = true;
           }
         }
@@ -153,6 +158,7 @@ export default function ReactSwipeProps({
         } else {
           setDst(final);
         }
+        setInteracting(false);
         removeListeners();
       }
 
@@ -162,7 +168,7 @@ export default function ReactSwipeProps({
       document.addEventListener('mouseup', handleEnd);
     };
 
-    if (root.current) {
+    if (root.current && !interacting || pos !== dst) {
       root.current.addEventListener('touchstart', handleDragStart, handlerOptions);
       root.current.addEventListener('touchforcechange', () => undefined, false);
       root.current.addEventListener('mousedown', handleDragStart);
@@ -182,4 +188,4 @@ export default function ReactSwipeProps({
       {children && children(pos, go)}
     </div>
   );
-}
+};
