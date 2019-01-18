@@ -3,8 +3,6 @@ import runWithFps from 'run-with-fps';
 
 function easeInOutQuad (t) { return t<.5 ? 2*t*t : -1+(4-2*t)*t }
 
-const slideDuration = 300;
-
 function tween(from, to, duration, cb) {
   let stopped = false;
   const start = Date.now();
@@ -45,7 +43,15 @@ const useBoundingClientRect = (ref) => {
   return rect;
 };
 
-export default function ReactSwipeProps({ children, pos: propsPos = 0, min, max, transitionEnd, ...props }) {
+export default function ReactSwipeProps({
+  children,
+  pos: propsPos = 0,
+  min,
+  max,
+  transitionEnd,
+  slideDuration = 300,
+  ...props
+}) {
   const [pos, setPos] = useState(min);
   const [dst, setDst] = useState(min);
   const root = useRef(null);
