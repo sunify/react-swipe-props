@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import runWithFps from 'run-with-fps';
-import { Motion, spring } from 'react-motion';
 
 function easeInOutQuad (t) { return t<.5 ? 2*t*t : -1+(4-2*t)*t }
 
@@ -13,7 +12,7 @@ function tween(from, to, duration, cb) {
     if (spent === duration || stopped) {
       stop();
     }
-  }, 30);
+  }, 60);
 
   return () => {
     stopped = true;
@@ -55,23 +54,42 @@ export default function ReactSwipeProps({
 }) {
   const [pos, setPos] = useState(min);
   const [interacting, setInteracting] = useState(false);
+  const [dst, setDst] = useState(min);
   const root = useRef(null);
   const rect = useBoundingClientRect(root);
 
+  const slide = (from, to) => {
+    return tween(from, to, Math.max(1, Math.min(2, Math.abs(from - to))) * slideDuration, (v) => {
+      setPos(v);
+
+      if (v === to && transitionEnd) {
+        transitionEnd(to);
+      }
+    });
+  }
+
   const go = (pos) => {
-    setPos(pos);
+    setDst(pos);
   };
 
   useEffect(() => {
     const nextPos = Math.min(Math.max(Math.round(propsPos), min), max);
     if (nextPos !== pos) {
-      setPos(nextPos);
+      setDst(nextPos);
     }
 
     if (nextPos !== propsPos && transitionEnd) {
       transitionEnd(nextPos);
     }
   }, [propsPos]);
+
+  useEffect(() => {
+    if (dst !== pos) {
+      const stop = slide(pos, dst);
+
+      return stop;
+    }
+  }, [dst, propsPos]);
 
   const limitPos = (n) => Math.min(Math.max(Math.round(n), min), max)
 
@@ -116,12 +134,12 @@ export default function ReactSwipeProps({
           state.y = pageY;
 
           setPos(pos + state.delta);
+          setDst(pos + state.delta);
         } else {
           if (e.touches) {
             if (!(e.touches.length > 1 || (e.scale && e.scale !== 1)) && Math.abs(deltaX) > Math.abs(deltaY)) {
               e.preventDefault();
               state.dragging = true;
-              setInteracting(true);
             } else {
               removeListeners();
             }
@@ -133,18 +151,14 @@ export default function ReactSwipeProps({
       }
 
       const handleEnd = () => {
-        if (state.dragging) {
-          const final = limitPos(Math.round(pos + state.delta));
+        const final = limitPos(Math.round(pos + state.delta));
 
-          setInteracting(false);
-          setTimeout(() => {
-            if (final === pos && Date.now() - startTime < 250 && Math.abs(state.delta * rect.width) > 30) {
-              setPos(limitPos(final + Math.sign(state.delta)));
-            } else {
-              setPos(final);
-            }
-          });
+        if (final === pos && Date.now() - startTime < 250 && Math.abs(state.delta * rect.width) > 30) {
+          setDst(limitPos(final + Math.sign(state.delta)));
+        } else {
+          setDst(final);
         }
+        setInteracting(false);
         removeListeners();
       }
 
@@ -154,7 +168,7 @@ export default function ReactSwipeProps({
       document.addEventListener('mouseup', handleEnd);
     };
 
-    if (root.current && !interacting) {
+    if (root.current && !interacting || pos !== dst) {
       root.current.addEventListener('touchstart', handleDragStart, handlerOptions);
       root.current.addEventListener('touchforcechange', () => undefined, false);
       root.current.addEventListener('mousedown', handleDragStart);
@@ -169,15 +183,9 @@ export default function ReactSwipeProps({
     }
   });
 
-  const style = {
-    pos: interacting ? pos : spring(pos),
-  };
-
   return (
     <div ref={root} {...props}>
-      <Motion style={style}>
-        {style => children && children(style.pos, go)}
-      </Motion>
+      {children && children(pos, go)}
     </div>
   );
 };
