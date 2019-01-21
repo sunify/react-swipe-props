@@ -28,6 +28,6 @@
     "build": "yarn prebuild && ./node_modules/.bin/babel src --out-dir dist",
     "prepublish": "yarn build",
     "start-demo": "./node_modules/.bin/parcel index.html --open",
-    "build-demo": "./node_modules/.bin/parcel build index.html"
+    "build-demo": "./node_modules/.bin/parcel build --public-url '.' index.html"
   }
 }
