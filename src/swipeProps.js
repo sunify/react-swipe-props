@@ -50,6 +50,8 @@ export default function ReactSwipeProps({
   max,
   transitionEnd,
   slideDuration = 300,
+  discrete = false,
+  swiping,
   ...props
 }) {
   const [pos, setPos] = useState(min);
@@ -59,17 +61,25 @@ export default function ReactSwipeProps({
   const rect = useBoundingClientRect(root);
 
   const slide = (from, to) => {
-    return tween(from, to, Math.max(1, Math.min(2, Math.abs(from - to))) * slideDuration, (v) => {
-      setPos(v);
+    if (discrete) {
+      setPos(to);
+      transitionEnd(to);
+    } else {
+      return tween(from, to, Math.max(1, Math.min(2, Math.abs(from - to))) * slideDuration, (v) => {
+        setPos(v);
 
-      if (v === to && transitionEnd) {
-        transitionEnd(to);
-      }
-    });
+        if (v === to && transitionEnd) {
+          transitionEnd(to);
+        }
+      });
+    }
   }
 
   const go = (pos) => {
     setDst(pos);
+    if (discrete) {
+      setPos(pos);
+    }
   };
 
   useEffect(() => {
@@ -133,8 +143,14 @@ export default function ReactSwipeProps({
           state.x = pageX;
           state.y = pageY;
 
-          setPos(pos + state.delta);
-          setDst(pos + state.delta);
+          if (typeof swiping === 'function') {
+            swiping(pos + state.delta);
+          }
+
+          if (!discrete) {
+            setPos(pos + state.delta);
+            setDst(pos + state.delta);
+          }
         } else {
           if (e.touches) {
             if (!(e.touches.length > 1 || (e.scale && e.scale !== 1)) && Math.abs(deltaX) > Math.abs(deltaY)) {
@@ -150,13 +166,23 @@ export default function ReactSwipeProps({
         }
       }
 
+      const finish = (value) => {
+        if (discrete) {
+          setPos(value);
+          if (typeof transitionEnd === 'function') {
+            transitionEnd(value);
+          }
+        }
+        setDst(value);
+      }
+
       const handleEnd = () => {
         const final = limitPos(Math.round(pos + state.delta));
 
         if (final === pos && Date.now() - startTime < 250 && Math.abs(state.delta * rect.width) > 30) {
-          setDst(limitPos(final + Math.sign(state.delta)));
+          finish(limitPos(final + Math.sign(state.delta)));
         } else {
-          setDst(final);
+          finish(final);
         }
         setInteracting(false);
         removeListeners();
