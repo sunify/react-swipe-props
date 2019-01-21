@@ -22,4 +22,4 @@ module.exports=function(n,e){var t=1e3/e,o=Date.now(),a=!1;return requestAnimati
 },{"react":"HdMw","./src/swipeProps":"gt+Q"}],"lgAh":[function(require,module,exports) {
 "use strict";var e=u(require("react")),r=require("react-dom"),t=u(require("./app"));function u(e){return e&&e.__esModule?e:{default:e}}(0,r.render)(e.default.createElement(t.default,null),document.getElementById("app"));
 },{"react":"HdMw","react-dom":"X9zx","./app":"A2T1"}]},{},["lgAh"], null)
-//# sourceMappingURL=/demo.d04c4a52.map
+//# sourceMappingURL=demo.d04c4a52.map
