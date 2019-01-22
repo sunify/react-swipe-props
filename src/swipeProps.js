@@ -57,15 +57,16 @@ export default function ReactSwipeProps({
         to,
         v => {
           setPos(v);
-
-          if (v === to && transitionEnd) {
-            transitionEnd(to);
-          }
         },
         {
           duration:
             Math.max(1, Math.min(2, Math.abs(from - to))) * slideDuration,
-          easing
+          easing,
+          end: () => {
+            if (transitionEnd) {
+              transitionEnd(to);
+            }
+          }
         }
       );
     }
