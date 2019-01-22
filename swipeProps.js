@@ -5,7 +5,7 @@ exports.default = ReactSwipeProps;
 
 var _react = _interopRequireWildcard(require("react"));
 
-var _runWithFps = _interopRequireDefault(require("run-with-fps"));
+var _tweeen = _interopRequireDefault(require("tweeen"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -16,23 +16,7 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
 function easeInOutQuad(t) {
-  return t < .5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
-}
-
-function tween(from, to, duration, cb) {
-  var stopped = false;
-  var start = Date.now();
-  var stop = (0, _runWithFps.default)(function () {
-    var spent = Math.min(Date.now() - start, duration);
-    cb(from + (to - from) * easeInOutQuad(spent / duration));
-
-    if (spent === duration || stopped) {
-      stop();
-    }
-  }, 60);
-  return function () {
-    stopped = true;
-  };
+  return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
 }
 
 var useBoundingClientRect = function useBoundingClientRect(ref) {
@@ -68,7 +52,9 @@ function ReactSwipeProps(_ref) {
       _ref$discrete = _ref.discrete,
       discrete = _ref$discrete === void 0 ? false : _ref$discrete,
       swiping = _ref.swiping,
-      props = _objectWithoutPropertiesLoose(_ref, ["children", "pos", "min", "max", "transitionEnd", "slideDuration", "discrete", "swiping"]);
+      _ref$easing = _ref.easing,
+      easing = _ref$easing === void 0 ? easeInOutQuad : _ref$easing,
+      props = _objectWithoutPropertiesLoose(_ref, ["children", "pos", "min", "max", "transitionEnd", "slideDuration", "discrete", "swiping", "easing"]);
 
   var _useState2 = (0, _react.useState)(min),
       pos = _useState2[0],
@@ -90,12 +76,15 @@ function ReactSwipeProps(_ref) {
       setPos(to);
       transitionEnd(to);
     } else {
-      return tween(from, to, Math.max(1, Math.min(2, Math.abs(from - to))) * slideDuration, function (v) {
+      return (0, _tweeen.default)(from, to, function (v) {
         setPos(v);
 
         if (v === to && transitionEnd) {
           transitionEnd(to);
         }
+      }, {
+        duration: Math.max(1, Math.min(2, Math.abs(from - to))) * slideDuration,
+        easing: easing
       });
     }
   };
@@ -262,5 +251,3 @@ function ReactSwipeProps(_ref) {
     ref: root
   }, props), children && children(pos, go));
 }
-
-;
