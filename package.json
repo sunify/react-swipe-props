@@ -1,6 +1,6 @@
 {
   "name": "react-swipe-props",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "main": "dist/swipeProps.js",
   "license": "MIT",
   "devDependencies": {
