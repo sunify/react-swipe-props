@@ -78,13 +78,14 @@ function ReactSwipeProps(_ref) {
     } else {
       return (0, _tweeen.default)(from, to, function (v) {
         setPos(v);
-
-        if (v === to && transitionEnd) {
-          transitionEnd(to);
-        }
       }, {
         duration: Math.max(1, Math.min(2, Math.abs(from - to))) * slideDuration,
-        easing: easing
+        easing: easing,
+        end: function end() {
+          if (transitionEnd) {
+            transitionEnd(to);
+          }
+        }
       });
     }
   };
