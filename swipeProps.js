@@ -78,14 +78,15 @@ function ReactSwipeProps(_ref) {
     } else {
       return (0, _tweeen.default)(from, to, function (v) {
         setPos(v);
-      }, {
-        duration: Math.max(1, Math.min(2, Math.abs(from - to))) * slideDuration,
-        easing: easing,
-        end: function end() {
+
+        if (v === to) {
           if (transitionEnd) {
             transitionEnd(to);
           }
         }
+      }, {
+        duration: Math.max(1, Math.min(2, Math.abs(from - to))) * slideDuration,
+        easing: easing
       });
     }
   };
@@ -250,5 +251,5 @@ function ReactSwipeProps(_ref) {
   });
   return _react.default.createElement("div", _extends({
     ref: root
-  }, props), children && children(pos, go));
+  }, props), children && children(pos, go, interacting));
 }
