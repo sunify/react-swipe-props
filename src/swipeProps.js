@@ -57,16 +57,17 @@ export default function ReactSwipeProps({
         to,
         v => {
           setPos(v);
-        },
-        {
-          duration:
-            Math.max(1, Math.min(2, Math.abs(from - to))) * slideDuration,
-          easing,
-          end: () => {
+
+          if (v === to) {
             if (transitionEnd) {
               transitionEnd(to);
             }
           }
+        },
+        {
+          duration:
+            Math.max(1, Math.min(2, Math.abs(from - to))) * slideDuration,
+          easing
         }
       );
     }
@@ -233,7 +234,7 @@ export default function ReactSwipeProps({
 
   return (
     <div ref={root} {...props}>
-      {children && children(pos, go)}
+      {children && children(pos, go, interacting)}
     </div>
   );
 }
