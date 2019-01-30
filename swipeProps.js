@@ -31,9 +31,11 @@ function ReactSwipeProps(_ref) {
       _ref$discrete = _ref.discrete,
       discrete = _ref$discrete === void 0 ? false : _ref$discrete,
       swiping = _ref.swiping,
+      _ref$direction = _ref.direction,
+      direction = _ref$direction === void 0 ? 'horizontal' : _ref$direction,
       _ref$easing = _ref.easing,
       easing = _ref$easing === void 0 ? easeInOutQuad : _ref$easing,
-      props = _objectWithoutPropertiesLoose(_ref, ["children", "pos", "min", "max", "transitionEnd", "slideDuration", "discrete", "swiping", "easing"]);
+      props = _objectWithoutPropertiesLoose(_ref, ["children", "pos", "min", "max", "transitionEnd", "slideDuration", "discrete", "swiping", "direction", "easing"]);
 
   var _useState = (0, _react.useState)(min),
       pos = _useState[0],
@@ -66,7 +68,7 @@ function ReactSwipeProps(_ref) {
           }
         }
       }, {
-        duration: Math.max(1, Math.min(2, Math.abs(from - to))) * slideDuration,
+        duration: slideDuration,
         easing: easing
       });
     }
@@ -118,9 +120,14 @@ function ReactSwipeProps(_ref) {
           pageX = _ref2.pageX,
           pageY = _ref2.pageY;
 
+      var directionValue = function directionValue(horizontalValue, verticalValue) {
+        return direction === 'horizontal' ? horizontalValue : verticalValue;
+      };
+
       var state = {
         x: pageX,
         y: pageY,
+        pos: directionValue(pageX, pageY),
         dragging: false,
         delta: 0
       };
@@ -150,14 +157,14 @@ function ReactSwipeProps(_ref) {
             pageX = _ref3.pageX,
             pageY = _ref3.pageY;
 
-        var deltaX = state.x - pageX;
-        var deltaY = state.y - pageY;
+        var delta = state.pos - directionValue(pageX, pageY);
 
         if (state.dragging) {
           e.preventDefault();
-          var deltaPos = deltaX / rect.width;
+          var deltaPos = delta / directionValue(rect.width, rect.height);
           var speed = calcSpeed(deltaPos);
           state.delta += deltaPos * speed;
+          state.pos = directionValue(pageX, pageY);
           state.x = pageX;
           state.y = pageY;
 
@@ -171,7 +178,10 @@ function ReactSwipeProps(_ref) {
           }
         } else {
           if (e.touches) {
-            if (!(e.touches.length > 1 || e.scale && e.scale !== 1) && Math.abs(deltaX) > Math.abs(deltaY)) {
+            var dx = state.x - pageX;
+            var dy = state.y - pageY;
+
+            if (!(e.touches.length > 1 || e.scale && e.scale !== 1) && Math.abs(directionValue(dx, dy)) > Math.abs(directionValue(dy, dx))) {
               e.preventDefault();
               state.dragging = true;
               setInteracting(true);
@@ -200,7 +210,7 @@ function ReactSwipeProps(_ref) {
       var handleEnd = function handleEnd() {
         var final = limitPos(Math.round(pos + state.delta));
 
-        if (final === pos && Date.now() - startTime < 250 && Math.abs(state.delta * rect.width) > 30) {
+        if (final === pos && Date.now() - startTime < 250 && Math.abs(state.delta * directionValue(rect.width, rect.height)) > 30) {
           finish(limitPos(final + Math.sign(state.delta)));
         } else {
           finish(final);
