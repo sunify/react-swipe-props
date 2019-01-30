@@ -14,6 +14,7 @@ export default function ReactSwipeProps({
   slideDuration = 300,
   discrete = false,
   swiping,
+  direction = 'horizontal',
   easing = easeInOutQuad,
   ...props
 }) {
@@ -91,7 +92,15 @@ export default function ReactSwipeProps({
       }
       const rect = root.current.getBoundingClientRect();
       const { pageX, pageY } = e.touches ? e.touches[0] : e;
-      const state = { x: pageX, y: pageY, dragging: false, delta: 0 };
+      const directionValue = (horizontalValue, verticalValue) =>
+        direction === 'horizontal' ? horizontalValue : verticalValue;
+      const state = {
+        x: pageX,
+        y: pageY,
+        pos: directionValue(pageX, pageY),
+        dragging: false,
+        delta: 0
+      };
       const startTime = Date.now();
 
       const calcSpeed = delta => {
@@ -114,13 +123,13 @@ export default function ReactSwipeProps({
 
       const handleMove = e => {
         const { pageX, pageY } = e.touches ? e.touches[0] : e;
-        const deltaX = state.x - pageX;
-        const deltaY = state.y - pageY;
+        const delta = state.pos - directionValue(pageX, pageY);
         if (state.dragging) {
           e.preventDefault();
-          const deltaPos = deltaX / rect.width;
+          const deltaPos = delta / directionValue(rect.width, rect.height);
           const speed = calcSpeed(deltaPos);
           state.delta += deltaPos * speed;
+          state.pos = directionValue(pageX, pageY);
           state.x = pageX;
           state.y = pageY;
 
@@ -134,9 +143,12 @@ export default function ReactSwipeProps({
           }
         } else {
           if (e.touches) {
+            const dx = state.x - pageX;
+            const dy = state.y - pageY;
             if (
               !(e.touches.length > 1 || (e.scale && e.scale !== 1)) &&
-              Math.abs(deltaX) > Math.abs(deltaY)
+              Math.abs(directionValue(dx, dy)) >
+                Math.abs(directionValue(dy, dx))
             ) {
               e.preventDefault();
               state.dragging = true;
@@ -167,7 +179,7 @@ export default function ReactSwipeProps({
         if (
           final === pos &&
           Date.now() - startTime < 250 &&
-          Math.abs(state.delta * rect.width) > 30
+          Math.abs(state.delta * directionValue(rect.width, rect.height)) > 30
         ) {
           finish(limitPos(final + Math.sign(state.delta)));
         } else {

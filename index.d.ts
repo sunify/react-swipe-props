@@ -10,6 +10,7 @@ declare module 'react-swipe-props' {
     discrete?: boolean;
     min: number;
     max: number;
+    direction?: 'horizontal' | 'vertical';
     swiping?: (pos: number) => void;
     transitionEnd?: (pos: number) => void;
   } & React.HTMLProps<HTMLDivElement>;
