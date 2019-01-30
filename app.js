@@ -7,10 +7,10 @@ export default function App() {
   return (
     <>
       <menu className="menu">
-        <Link to="/">Sliders</Link>
-        <Link to="/pages">Pages</Link>
+        <Link to={`${process.env.BASE_PATH}/`}>Sliders</Link>
+        <Link to={`${process.env.BASE_PATH}/pages`}>Pages</Link>
       </menu>
-      <Router style={{ height: '100%' }}>
+      <Router style={{ height: '100%' }} basepath={process.env.BASE_PATH}>
         <SlidersDemo path="/" />
         <RoutesDemo path="/pages" slide={0} />
         <RoutesDemo path="/pages/:slide" />

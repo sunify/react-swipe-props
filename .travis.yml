@@ -1,9 +1,10 @@
 language: node_js
 node_js:
-  - "10"
+  - '10'
 
 before_deploy:
-  - yarn build-demo
+  - BASE_PATH=/react-swipe-props yarn build-demo
+  - cp index.html 404.html
 
 deploy:
   provider: pages

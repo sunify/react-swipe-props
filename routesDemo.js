@@ -11,9 +11,9 @@ export default function RoutesDemo({ slide, navigate }) {
   const go = pos => {
     if (pos !== Number(slide)) {
       if (pos) {
-        navigate(`/pages/${pos}`);
+        navigate(`${process.env.BASE_PATH}/pages/${pos}`);
       } else {
-        navigate(`/pages`);
+        navigate(`${process.env.BASE_PATH}/pages`);
       }
     }
   };
@@ -40,7 +40,14 @@ export default function RoutesDemo({ slide, navigate }) {
         >
           <menu>
             {range(0, count).map(i => (
-              <Link to={i ? `/pages/${i}` : '/pages'} key={i}>
+              <Link
+                to={
+                  i
+                    ? `${process.env.BASE_PATH}/pages/${i}`
+                    : `${process.env.BASE_PATH}/pages`
+                }
+                key={i}
+              >
                 Page {i + 1}
               </Link>
             ))}
