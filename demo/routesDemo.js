@@ -1,7 +1,8 @@
 import React from 'react';
-import RSWP from './src/swipeProps';
+import RSWP from '../src/swipeProps';
 import lerpColor from '@sunify/lerp-color';
 import { Link } from '@reach/router';
+import { makeUrl } from './utils';
 
 const range = (from, to) =>
   Array.from(new Array(to - from), (_, i) => i + from);
@@ -11,9 +12,9 @@ export default function RoutesDemo({ slide, navigate }) {
   const go = pos => {
     if (pos !== Number(slide)) {
       if (pos) {
-        navigate(`${process.env.BASE_PATH}/pages/${pos}`);
+        navigate(makeUrl(`/pages/${pos}`));
       } else {
-        navigate(`${process.env.BASE_PATH}/pages`);
+        navigate(makeUrl(`/pages`));
       }
     }
   };
@@ -23,6 +24,7 @@ export default function RoutesDemo({ slide, navigate }) {
       pos={Number(slide)}
       min={0}
       max={count - 1}
+      tabIndex={0}
       transitionEnd={go}
       className="routesDemo"
       direction="vertical"
@@ -40,14 +42,7 @@ export default function RoutesDemo({ slide, navigate }) {
         >
           <menu>
             {range(0, count).map(i => (
-              <Link
-                to={
-                  i
-                    ? `${process.env.BASE_PATH}/pages/${i}`
-                    : `${process.env.BASE_PATH}/pages`
-                }
-                key={i}
-              >
+              <Link to={makeUrl(i ? `/pages/${i}` : `/pages`)} key={i}>
                 Page {i + 1}
               </Link>
             ))}
