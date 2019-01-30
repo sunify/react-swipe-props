@@ -1,1 +1,1 @@
-export const makeUrl = url => `${process.env.BASE_URL || ''}${url}`;
+export const makeUrl = url => `${process.env.BASE_PATH || ''}${url}`;
