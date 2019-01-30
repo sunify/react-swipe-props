@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import tween from 'tweeen';
+import tweeen from 'tweeen';
 
 function easeInOutQuad(t) {
   return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
@@ -18,9 +18,9 @@ export default function ReactSwipeProps({
   easing = easeInOutQuad,
   ...props
 }) {
-  const [pos, setPos] = useState(min);
+  const [pos, setPos] = useState(propsPos || min);
   const [interacting, setInteracting] = useState(false);
-  const [dst, setDst] = useState(min);
+  const [dst, setDst] = useState(propsPos || min);
   const root = useRef(null);
 
   const slide = (from, to) => {
@@ -30,7 +30,7 @@ export default function ReactSwipeProps({
         transitionEnd(to);
       }
     } else {
-      return tween(
+      return tweeen(
         from,
         to,
         v => {
