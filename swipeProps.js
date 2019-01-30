@@ -19,27 +19,6 @@ function easeInOutQuad(t) {
   return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
 }
 
-var useBoundingClientRect = function useBoundingClientRect(ref) {
-  var _useState = (0, _react.useState)(null),
-      rect = _useState[0],
-      setRect = _useState[1];
-
-  (0, _react.useEffect)(function () {
-    var updateRect = function updateRect() {
-      if (ref.current) {
-        setRect(ref.current.getBoundingClientRect());
-      }
-    };
-
-    updateRect();
-    window.addEventListener('resize', updateRect);
-    return function () {
-      window.removeEventListener('resize', updateRect);
-    };
-  }, [ref.current]);
-  return rect;
-};
-
 function ReactSwipeProps(_ref) {
   var children = _ref.children,
       _ref$pos = _ref.pos,
@@ -56,25 +35,27 @@ function ReactSwipeProps(_ref) {
       easing = _ref$easing === void 0 ? easeInOutQuad : _ref$easing,
       props = _objectWithoutPropertiesLoose(_ref, ["children", "pos", "min", "max", "transitionEnd", "slideDuration", "discrete", "swiping", "easing"]);
 
-  var _useState2 = (0, _react.useState)(min),
-      pos = _useState2[0],
-      setPos = _useState2[1];
+  var _useState = (0, _react.useState)(min),
+      pos = _useState[0],
+      setPos = _useState[1];
 
-  var _useState3 = (0, _react.useState)(false),
-      interacting = _useState3[0],
-      setInteracting = _useState3[1];
+  var _useState2 = (0, _react.useState)(false),
+      interacting = _useState2[0],
+      setInteracting = _useState2[1];
 
-  var _useState4 = (0, _react.useState)(min),
-      dst = _useState4[0],
-      setDst = _useState4[1];
+  var _useState3 = (0, _react.useState)(min),
+      dst = _useState3[0],
+      setDst = _useState3[1];
 
   var root = (0, _react.useRef)(null);
-  var rect = useBoundingClientRect(root);
 
   var slide = function slide(from, to) {
     if (discrete) {
       setPos(to);
-      transitionEnd(to);
+
+      if (transitionEnd) {
+        transitionEnd(to);
+      }
     } else {
       return (0, _tweeen.default)(from, to, function (v) {
         setPos(v);
@@ -127,9 +108,11 @@ function ReactSwipeProps(_ref) {
     };
 
     var handleDragStart = function handleDragStart(e) {
-      if (!e.touches && e.button !== 0) {
+      if (!e.touches && e.button !== 0 || !root.current) {
         return;
       }
+
+      var rect = root.current.getBoundingClientRect();
 
       var _ref2 = e.touches ? e.touches[0] : e,
           pageX = _ref2.pageX,
@@ -191,6 +174,7 @@ function ReactSwipeProps(_ref) {
             if (!(e.touches.length > 1 || e.scale && e.scale !== 1) && Math.abs(deltaX) > Math.abs(deltaY)) {
               e.preventDefault();
               state.dragging = true;
+              setInteracting(true);
             } else {
               removeListeners();
             }
