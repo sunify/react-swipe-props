@@ -37,7 +37,7 @@ function ReactSwipeProps(_ref) {
       easing = _ref$easing === void 0 ? easeInOutQuad : _ref$easing,
       props = _objectWithoutPropertiesLoose(_ref, ["children", "pos", "min", "max", "transitionEnd", "slideDuration", "discrete", "swiping", "direction", "easing"]);
 
-  var _useState = (0, _react.useState)(min),
+  var _useState = (0, _react.useState)(propsPos || min),
       pos = _useState[0],
       setPos = _useState[1];
 
@@ -45,7 +45,7 @@ function ReactSwipeProps(_ref) {
       interacting = _useState2[0],
       setInteracting = _useState2[1];
 
-  var _useState3 = (0, _react.useState)(min),
+  var _useState3 = (0, _react.useState)(propsPos || min),
       dst = _useState3[0],
       setDst = _useState3[1];
 
