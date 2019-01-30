@@ -4,7 +4,7 @@ node_js:
 
 before_deploy:
   - BASE_PATH=/react-swipe-props yarn build-demo
-  - cp index.html 404.html
+  - cp dist/index.html dist/404.html
 
 deploy:
   provider: pages
