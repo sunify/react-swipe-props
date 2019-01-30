@@ -10,7 +10,8 @@
     "@babel/preset-react": "^7.0.0",
     "parcel-bundler": "^1.11.0",
     "react": "16.8.0-alpha.1",
-    "react-dom": "16.8.0-alpha.1"
+    "react-dom": "16.8.0-alpha.1",
+    "size-limit": "^0.21.1"
   },
   "peerDependencies": {
     "react": "16.7.0-alpha.2 || 16.8.0-alpha.0 || 16.8.0-alpha.1"
@@ -25,10 +26,11 @@
   ],
   "scripts": {
     "test": "exit 0",
+    "size": "size-limit",
     "prebuild": "rm -rf dist && mkdir dist",
-    "build": "yarn prebuild && ./node_modules/.bin/babel src --out-dir dist",
+    "build": "yarn prebuild && babel src --out-dir dist && yarn size",
     "prepublish": "yarn build",
-    "start-demo": "./node_modules/.bin/parcel index.html --open",
-    "build-demo": "./node_modules/.bin/parcel build --public-url '.' index.html"
+    "start-demo": "parcel index.html --open",
+    "build-demo": "parcel build --public-url '.' index.html"
   }
 }

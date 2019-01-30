@@ -1,0 +1,6 @@
+[
+  {
+    path: "dist/swipeProps.js",
+    limit: "2 KB"
+  }
+]
