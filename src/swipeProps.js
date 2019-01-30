@@ -42,8 +42,7 @@ export default function ReactSwipeProps({
           }
         },
         {
-          duration:
-            Math.max(1, Math.min(2, Math.abs(from - to))) * slideDuration,
+          duration: slideDuration,
           easing
         }
       );

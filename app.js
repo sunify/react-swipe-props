@@ -56,6 +56,7 @@ export default function App() {
     <div className="demo">
       <h1>Swipe demo</h1>
 
+      <h2>Continuous</h2>
       <RSWP
         className="userSwipeClass"
         pos={pos}
@@ -125,10 +126,10 @@ export default function App() {
         }}
       </RSWP>
 
+      <h2>Discrete</h2>
       <RSWP
         className="userSwipeClass"
         discrete
-        style={{ marginTop: 100 }}
         pos={pos}
         min={0}
         max={count - 1}
@@ -136,7 +137,6 @@ export default function App() {
         swiping={handleSwiping}
       >
         {(pos, _, dragging) => {
-          console.log(dragging);
           return (
             <div className={`swipeableRoot`}>
               <button className="prev" onClick={prev}>
@@ -166,7 +166,9 @@ export default function App() {
                 className="progress"
                 ref={progressRef}
                 style={{
-                  transition: !dragging && 'width 0.3s',
+                  transition:
+                    !dragging &&
+                    'width 0.3s cubic-bezier(0.455, 0.03, 0.515, 0.955)',
                   width: `calc(${100 -
                     Math.min(100, (pos / (count - 1)) * 100)}% - 30px)`
                 }}
@@ -175,7 +177,9 @@ export default function App() {
                 className="swipeable"
                 ref={swipeRef}
                 style={{
-                  transition: !dragging && 'left 0.3s',
+                  transition:
+                    !dragging &&
+                    'left 0.3s cubic-bezier(0.455, 0.03, 0.515, 0.955)',
                   left: `${-pos * 100}%`
                 }}
               >
@@ -186,7 +190,8 @@ export default function App() {
                         ref={numRefs[i]}
                         style={{
                           transition:
-                            !dragging && 'transform 0.3s, opacity 0.3s',
+                            !dragging &&
+                            'transform 0.3s, opacity 0.3s cubic-bezier(0.455, 0.03, 0.515, 0.955)',
                           transform: `scale(${((count - Math.abs(i - pos)) /
                             count) **
                             8 *

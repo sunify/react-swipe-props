@@ -18,8 +18,13 @@ body {
 
 h1 {
   font-size: 50px;
-  margin: 50px 0 100px;
+  margin: 50px 0;
   text-align: center;
+}
+
+h2 {
+  text-align: center;
+  margin: 100px 0 50px;
 }
 
 .swipeRoot {
@@ -41,7 +46,7 @@ h1 {
   top: -30px;
   right: -30px;
   bottom: -30px;
-  border: 30px solid rgba(50,50,0,0.3);
+  border: 30px solid rgba(50, 50, 0, 0.3);
 }
 
 .swipeable {
@@ -103,10 +108,11 @@ h1 {
 .dot-active::before {
   z-index: 1;
   opacity: 1;
-  background-color: #FF0;
+  background-color: #ff0;
 }
 
-.prev,.next {
+.prev,
+.next {
   position: absolute;
   z-index: 20;
   top: 50%;
