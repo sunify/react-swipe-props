@@ -7,8 +7,10 @@ declare module 'react-swipe-props' {
     ) => React.ReactNode;
     pos?: number;
     slideDuration?: number;
+    discrete?: boolean;
     min: number;
     max: number;
+    swiping?: (pos: number) => void;
     transitionEnd?: (pos: number) => void;
   } & React.HTMLProps<HTMLDivElement>;
 

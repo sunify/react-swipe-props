@@ -5,30 +5,6 @@ function easeInOutQuad(t) {
   return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
 }
 
-const useBoundingClientRect = ref => {
-  const [rect, setRect] = useState(null);
-
-  useEffect(
-    () => {
-      const updateRect = () => {
-        if (ref.current) {
-          setRect(ref.current.getBoundingClientRect());
-        }
-      };
-
-      updateRect();
-      window.addEventListener('resize', updateRect);
-
-      return () => {
-        window.removeEventListener('resize', updateRect);
-      };
-    },
-    [ref.current]
-  );
-
-  return rect;
-};
-
 export default function ReactSwipeProps({
   children,
   pos: propsPos = 0,
@@ -45,12 +21,13 @@ export default function ReactSwipeProps({
   const [interacting, setInteracting] = useState(false);
   const [dst, setDst] = useState(min);
   const root = useRef(null);
-  const rect = useBoundingClientRect(root);
 
   const slide = (from, to) => {
     if (discrete) {
       setPos(to);
-      transitionEnd(to);
+      if (transitionEnd) {
+        transitionEnd(to);
+      }
     } else {
       return tween(
         from,
@@ -110,9 +87,10 @@ export default function ReactSwipeProps({
   useEffect(() => {
     const handlerOptions = { passive: false };
     const handleDragStart = e => {
-      if (!e.touches && e.button !== 0) {
+      if ((!e.touches && e.button !== 0) || !root.current) {
         return;
       }
+      const rect = root.current.getBoundingClientRect();
       const { pageX, pageY } = e.touches ? e.touches[0] : e;
       const state = { x: pageX, y: pageY, dragging: false, delta: 0 };
       const startTime = Date.now();
@@ -163,6 +141,7 @@ export default function ReactSwipeProps({
             ) {
               e.preventDefault();
               state.dragging = true;
+              setInteracting(true);
             } else {
               removeListeners();
             }
